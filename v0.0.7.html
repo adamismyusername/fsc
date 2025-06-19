@@ -1,0 +1,674 @@
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .silver-calculator {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .calculator-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #37474f;
+            margin-bottom: 8px;
+        }
+
+        .calculator-subtitle {
+            font-size: 16px;
+            color: #546e7a;
+        }
+
+        .input-section {
+            padding: 36px 36px 0 36px;
+            background: #FFFFFF;
+            border: 1px 1px 0 1px solid #eceff1;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 4px 6px rgba(96, 125, 139, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .slider-section {
+            margin-bottom: 32px;
+            padding: 0 36px 36px 36px;
+            background: #FFFFFF;
+            border: 0 1px 1px 1px solid #eceff1;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px rgba(96, 125, 139, 0.1);
+            position: relative;
+        }
+
+        .input-label {
+            font-size: 24px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 36px;
+            display: block;
+        }
+
+        .amount-input {
+            width: 60%;
+            padding: 16px;
+            font-size: 20px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            border: 1px solid #cfd8dc;
+            border-radius: 8px;
+            background: #ECEFF1;
+            color: #263238;
+            margin: 0 auto 24px auto;
+            transition: all 0.4s ease;
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: #607d8b;
+            background: #ffffff;
+        }
+
+        .amount-input.highlight {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: #4CAF50;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 90%;
+            margin: 0 auto;
+            padding: 16px 0;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #eceff1;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .slider.highlight {
+            background: rgba(76, 175, 80, 0.5);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #607d8b;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(96, 125, 139, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #546e7a;
+            transform: scale(1.1);
+        }
+
+        .slider.highlight::-webkit-slider-thumb {
+            background: #4CAF50;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.5);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #607d8b;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(96, 125, 139, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .slider.highlight::-moz-range-thumb {
+            background: #4CAF50;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.5);
+        }
+
+        .slider-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #78909c;
+        }
+
+        .marker-line {
+            width: 2px;
+            background: #b0bec5;
+            margin-bottom: 4px;
+        }
+
+        .marker-line.major {
+            height: 12px;
+        }
+
+        .marker-line.minor {
+            height: 8px;
+        }
+
+        .result-section {
+            text-align: center;
+            padding: 32px 24px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #FFFFFF;
+            border: 1px solid #eceff1;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(96, 125, 139, 0.1);
+            margin-top: 20px;
+        }
+
+        .result-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 12px;
+        }
+
+        .result-amount {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 80px;
+            color: #079e6b;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .result-description {
+            font-size: 14px;
+            color: #546e7a;
+        }
+
+        /* New class for instruction message */
+        .instruction-message {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            color: #455a64;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            padding: 0 20px;
+        }
+
+        /* Hint bubble styles */
+        .hint-bubble {
+            position: absolute;
+            background: #4CAF50;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hint-bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .hint-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-bubble.input-hint {
+            top: 80%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .hint-bubble.input-hint.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .hint-bubble.input-hint::after {
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #4CAF50;
+        }
+
+        .hint-bubble.slider-hint {
+            top: -60px;
+            left: -12px;
+            transform: translateY(10px);
+        }
+
+        .hint-bubble.slider-hint.show {
+            transform: translateY(0);
+        }
+
+        .hint-bubble.slider-hint::after {
+            bottom: -8px;
+            left: 16px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #4CAF50;
+        }
+
+        .competitors-section {
+            border-top: 2px solid #eceff1;
+            padding-top: 24px;
+        }
+
+        .competitors-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #37474f;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .competitors-subtitle {
+            font-size: 14px;
+            color: #546e7a;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .competitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .competitor-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .competitor-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 8px;
+        }
+
+        .competitor-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f44336;
+            margin-bottom: 4px;
+        }
+
+        .competitor-note {
+            font-size: 12px;
+            color: #78909c;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 640px) {
+            .silver-calculator {
+                padding: 16px;
+            }
+
+            .calculator-title {
+                font-size: 24px;
+            }
+
+            .result-amount {
+                font-size: 48px;
+            }
+
+            .instruction-message {
+                font-size: 20px;
+            }
+
+            .competitor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slider-markers {
+                font-size: 10px;
+            }
+
+            .hint-bubble {
+                font-size: 12px;
+                padding: 10px 14px;
+            }
+        }
+    </style>
+
+    <div class="silver-calculator">
+        <div class="input-section">
+             <label class="input-label" for="amount-input">How Much Retirement Savings Would You Like To Protect?</label> 
+            <div style="position: relative;">
+                <input type="text" id="amount-input" class="amount-input" placeholder="$0" value="$0">
+                <div class="hint-bubble input-hint" id="input-hint">Enter an amount here</div>
+            </div>
+        </div>
+
+        <div class="slider-section">
+            <div class="slider-container">
+                <div style="position: relative;">
+                    <input type="range" id="amount-slider" class="slider" min="0" max="1000000" value="0" step="1000">
+                    <div class="hint-bubble slider-hint" id="slider-hint">Or use the slider</div>
+                </div>
+                <div class="slider-markers">
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$0</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$100K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$200K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$300K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$400K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$500K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$600K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$700K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$800K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$900K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$1M</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <!-- <div class="result-label">Your Free Silver</div> -->
+            <div class="result-amount" id="free-silver-amount">$0</div>
+            <div class="instruction-message" id="instruction-message" style="display: none;">
+                Enter an amount above
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration Settings
+        const CONFIG = {
+            showAllCompetitors: true,
+            showCompetitorA: true,
+            showCompetitorB: true,
+            showCompetitorC: true,
+            
+            competitors: {
+                A: { name: 'Competitor A', amount: 10000 },
+                B: { name: 'Competitor B', amount: 20000 },
+                C: { name: 'Competitor C', amount: 30000 }
+            }
+        };
+
+        // DOM elements
+        const amountInput = document.getElementById('amount-input');
+        const amountSlider = document.getElementById('amount-slider');
+        const freeSilverAmount = document.getElementById('free-silver-amount');
+        const instructionMessage = document.getElementById('instruction-message');
+        const inputHint = document.getElementById('input-hint');
+        const sliderHint = document.getElementById('slider-hint');
+
+        let hintTimeouts = [];
+        let hintInterval;
+        let restartTimeout;
+        let userHasInteracted = false;
+
+        // Format number as currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Parse currency string to number
+        function parseCurrency(str) {
+            return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+        }
+
+        // Calculate free silver based on amount
+        function calculateFreeSilver(amount) {
+            if (amount < 50000) {
+                return 0;
+            } else if (amount < 100000) {
+                return amount * 0.05;
+            } else {
+                return amount * 0.10;
+            }
+        }
+
+        // Show/hide instruction message and result amount
+        function updateResultDisplay(amount) {
+            if (amount === 0) {
+                freeSilverAmount.style.display = 'none';
+                instructionMessage.style.display = 'block';
+                // Start hint animations after delay if user hasn't permanently interacted
+                scheduleHintRestart();
+            } else {
+                freeSilverAmount.style.display = 'block';
+                instructionMessage.style.display = 'none';
+                stopHintCycle();
+                const freeSilver = calculateFreeSilver(amount);
+                freeSilverAmount.textContent = formatCurrency(freeSilver);
+            }
+        }
+
+        // Update all displays
+        function updateCalculator(amount) {
+            amountSlider.value = amount;
+            amountInput.value = formatCurrency(amount);
+            updateResultDisplay(amount);
+        }
+
+        // Single hint animation sequence
+        function showHintSequence() {
+            // Clear any existing hints and highlights
+            inputHint.classList.remove('show');
+            sliderHint.classList.remove('show');
+            amountInput.classList.remove('highlight');
+            amountSlider.classList.remove('highlight');
+
+            // Show input hint first with highlight
+            const timeout1 = setTimeout(() => {
+                inputHint.classList.add('show');
+                amountInput.classList.add('highlight');
+            }, 500);
+
+            // Hide input hint and highlight, show slider hint and highlight
+            const timeout2 = setTimeout(() => {
+                inputHint.classList.remove('show');
+                amountInput.classList.remove('highlight');
+            }, 3500);
+
+            const timeout3 = setTimeout(() => {
+                sliderHint.classList.add('show');
+                amountSlider.classList.add('highlight');
+            }, 4000);
+
+            // Hide slider hint and highlight
+            const timeout4 = setTimeout(() => {
+                sliderHint.classList.remove('show');
+                amountSlider.classList.remove('highlight');
+            }, 7000);
+
+            hintTimeouts.push(timeout1, timeout2, timeout3, timeout4);
+        }
+
+        // Schedule hint restart after delay
+        function scheduleHintRestart() {
+            // Clear any existing restart timeout
+            if (restartTimeout) {
+                clearTimeout(restartTimeout);
+            }
+
+            // Only schedule if amount is 0
+            const currentAmount = parseCurrency(amountInput.value);
+            if (currentAmount === 0) {
+                restartTimeout = setTimeout(() => {
+                    // Double-check amount is still 0 before starting
+                    const checkAmount = parseCurrency(amountInput.value);
+                    if (checkAmount === 0) {
+                        startHintCycle();
+                    }
+                }, 5000);
+            }
+        }
+
+        // Start the repeating hint cycle
+        function startHintCycle() {
+            const currentAmount = parseCurrency(amountInput.value);
+            if (currentAmount !== 0) return;
+            
+            stopHintCycle(); // Clear any existing cycle
+            
+            // Show first sequence immediately
+            showHintSequence();
+            
+            // Then repeat every 8 seconds
+            hintInterval = setInterval(() => {
+                const checkAmount = parseCurrency(amountInput.value);
+                if (checkAmount === 0) {
+                    showHintSequence();
+                } else {
+                    stopHintCycle();
+                }
+            }, 8000);
+        }
+
+        // Stop the hint cycle
+        function stopHintCycle() {
+            // Clear restart timeout
+            if (restartTimeout) {
+                clearTimeout(restartTimeout);
+                restartTimeout = null;
+            }
+            
+            // Clear all timeouts
+            hintTimeouts.forEach(timeout => clearTimeout(timeout));
+            hintTimeouts = [];
+            
+            // Clear interval
+            if (hintInterval) {
+                clearInterval(hintInterval);
+                hintInterval = null;
+            }
+            
+            // Hide hints and highlights
+            inputHint.classList.remove('show');
+            sliderHint.classList.remove('show');
+            amountInput.classList.remove('highlight');
+            amountSlider.classList.remove('highlight');
+        }
+
+        // Hide all hints when user actively interacts
+        function hideHints() {
+            userHasInteracted = true;
+            stopHintCycle();
+        }
+
+        // Event listeners
+        amountSlider.addEventListener('input', function() {
+            const amount = parseInt(this.value);
+            updateCalculator(amount);
+            
+            // Only hide hints permanently if user moves slider to non-zero
+            if (amount > 0) {
+                hideHints();
+            }
+        });
+
+        amountInput.addEventListener('input', function() {
+            const amount = parseCurrency(this.value);
+            const clampedAmount = Math.min(Math.max(amount, 0), 1000000);
+            updateCalculator(clampedAmount);
+            
+            // Only hide hints permanently if user enters non-zero amount
+            if (clampedAmount > 0) {
+                hideHints();
+            }
+        });
+
+        amountInput.addEventListener('focus', function() {
+            // Temporarily stop hints while focusing, but don't mark as permanently interacted
+            stopHintCycle();
+        });
+
+        amountInput.addEventListener('blur', function() {
+            const amount = parseCurrency(this.value);
+            const clampedAmount = Math.min(Math.max(amount, 0), 1000000);
+            this.value = formatCurrency(clampedAmount);
+        });
+
+        // Initialize calculator
+        updateCalculator(0);
+
+        // Start initial hint cycle
+        setTimeout(() => {
+            const amount = parseCurrency(amountInput.value);
+            if (amount === 0) {
+                startHintCycle();
+            }
+        }, 1000);
+    </script>
