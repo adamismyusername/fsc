@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Silver Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .silver-calculator {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(96, 125, 139, 0.1);
+            border: 1px solid #eceff1;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .calculator-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #37474f;
+            margin-bottom: 8px;
+        }
+
+        .calculator-subtitle {
+            font-size: 16px;
+            color: #546e7a;
+        }
+
+        .input-section {
+            margin-bottom: 32px;
+        }
+
+        .slider-section {
+            margin-bottom: 32px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 18px;
+            font-family: 'Inter', sans-serif;
+            border: 2px solid #cfd8dc;
+            border-radius: 8px;
+            background: #fafafa;
+            color: #37474f;
+            margin-bottom: 24px;
+            transition: border-color 0.2s ease;
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: #607d8b;
+            background: #ffffff;
+        }
+
+        .slider-container {
+            position: relative;
+            margin: 24px 0;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #eceff1;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #607d8b;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(96, 125, 139, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #546e7a;
+            transform: scale(1.1);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #607d8b;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(96, 125, 139, 0.3);
+        }
+
+        .slider-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #78909c;
+        }
+
+        .marker-line {
+            width: 2px;
+            background: #b0bec5;
+            margin-bottom: 4px;
+        }
+
+        .marker-line.major {
+            height: 12px;
+        }
+
+        .marker-line.minor {
+            height: 8px;
+        }
+
+        .result-section {
+            text-align: center;
+            padding: 32px 24px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .result-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 12px;
+        }
+
+        .result-amount {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 64px;
+            color: #079e6b;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .result-description {
+            font-size: 14px;
+            color: #546e7a;
+        }
+
+        .competitors-section {
+            border-top: 2px solid #eceff1;
+            padding-top: 24px;
+        }
+
+        .competitors-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #37474f;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .competitors-subtitle {
+            font-size: 14px;
+            color: #546e7a;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .competitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .competitor-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .competitor-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 8px;
+        }
+
+        .competitor-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f44336;
+            margin-bottom: 4px;
+        }
+
+        .competitor-note {
+            font-size: 12px;
+            color: #78909c;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 640px) {
+            .silver-calculator {
+                padding: 16px;
+            }
+
+            .calculator-title {
+                font-size: 24px;
+            }
+
+            .result-amount {
+                font-size: 48px;
+            }
+
+            .competitor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slider-markers {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="silver-calculator">
+        <div class="result-section">
+            <div class="result-label">Your Free Silver</div>
+            <div class="result-amount" id="free-silver-amount">$0</div>
+        </div>
+
+        <div class="input-section">
+            <label class="input-label" for="amount-input">Investment Amount</label>
+            <input type="text" id="amount-input" class="amount-input" placeholder="$0" value="$0">
+        </div>
+
+        <div class="slider-section">
+            <div class="slider-container">
+                <input type="range" id="amount-slider" class="slider" min="0" max="1000000" value="0" step="1000">
+                <div class="slider-markers">
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$0</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$100K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$200K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$300K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$400K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$500K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$600K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$700K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$800K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$900K</span>
+                    </div>
+                    <div class="marker">
+                        <div class="marker-line major"></div>
+                        <span>$1M</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="competitors-section" id="competitors-section">
+            <h2 class="competitors-title">Compare with Competitors</h2>
+            <div class="competitor-grid" id="competitor-grid">
+                <!-- Competitor cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration Settings
+        const CONFIG = {
+            showAllCompetitors: true,  // Master switch for all competitors
+            showCompetitorA: true,     // Individual competitor toggles
+            showCompetitorB: true,
+            showCompetitorC: true,
+            
+            // Competitor data with flexible calculation types
+            competitors: {
+                A: { 
+                    name: 'Birch Gold Group',
+                    calculationType: 'flat', // 'flat' or 'percentage'
+                    // Flat rate tiers: array of {minAmount, maxAmount, silverAmount}
+                    flatTiers: [
+                        { minAmount: 0, maxAmount: 49999, silverAmount: 0 },
+                        { minAmount: 50000, maxAmount: 99999, silverAmount: 500 },
+                        { minAmount: 100000, maxAmount: 249999, silverAmount: 1000 },
+                        { minAmount: 250000, maxAmount: 999999, silverAmount: 2500 },
+                        { minAmount: 1000000, maxAmount: Infinity, silverAmount: 10000 },
+                    ]
+                },
+                B: { 
+                    name: 'Competitor B',
+                    calculationType: 'percentage', // 'flat' or 'percentage'
+                    // Percentage tiers: array of {minAmount, maxAmount, percentage}
+                    percentageTiers: [
+                        { minAmount: 0, maxAmount: 49999.99, percentage: 0 },
+                        { minAmount: 50000, maxAmount: 99999.99, percentage: 5 },
+                        { minAmount: 100000, maxAmount: Infinity, percentage: 10 }
+                    ]
+                },
+                C: { 
+                    name: 'Competitor C',
+                    calculationType: 'flat', // 'flat' or 'percentage'
+                    // Mixed example with different flat tiers
+                    flatTiers: [
+                        { minAmount: 50000, maxAmount: 99999, silverAmount: 500 },
+                        { minAmount: 100000, maxAmount: 249999, silverAmount: 2500 },
+                        { minAmount: 250000, maxAmount: 499999, silverAmount: 7500 },
+                        { minAmount: 500000, maxAmount: Infinity, silverAmount: 15000 }
+                    ]
+                }
+            }
+        };
+
+        // DOM elements
+        const amountInput = document.getElementById('amount-input');
+        const amountSlider = document.getElementById('amount-slider');
+        const freeSilverAmount = document.getElementById('free-silver-amount');
+        const competitorsSection = document.getElementById('competitors-section');
+        const competitorGrid = document.getElementById('competitor-grid');
+
+        // Format number as currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Parse currency string to number
+        function parseCurrency(str) {
+            return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+        }
+
+        // Calculate free silver based on amount (main calculator - using percentage)
+        function calculateFreeSilver(amount) {
+            if (amount < 50000) {
+                return 0;
+            } else if (amount < 100000) {
+                return amount * 0.05;
+            } else {
+                return amount * 0.10;
+            }
+        }
+
+        // Calculate competitor silver based on their configuration
+        function calculateCompetitorSilver(amount, competitor) {
+            if (competitor.calculationType === 'flat') {
+                return calculateFlatRateSilver(amount, competitor.flatTiers);
+            } else if (competitor.calculationType === 'percentage') {
+                return calculatePercentageSilver(amount, competitor.percentageTiers);
+            }
+            return 0;
+        }
+
+        // Calculate flat rate silver based on tiers
+        function calculateFlatRateSilver(amount, tiers) {
+            for (const tier of tiers) {
+                if (amount >= tier.minAmount && amount <= tier.maxAmount) {
+                    return tier.silverAmount;
+                }
+            }
+            return 0;
+        }
+
+        // Calculate percentage-based silver based on tiers
+        function calculatePercentageSilver(amount, tiers) {
+            for (const tier of tiers) {
+                if (amount >= tier.minAmount && amount <= tier.maxAmount) {
+                    return amount * (tier.percentage / 100);
+                }
+            }
+            return 0;
+        }
+
+        // Get next tier information for competitor
+        function getNextTierInfo(amount, competitor) {
+            let tiers;
+            if (competitor.calculationType === 'flat') {
+                tiers = competitor.flatTiers;
+            } else if (competitor.calculationType === 'percentage') {
+                tiers = competitor.percentageTiers;
+            } else {
+                return null;
+            }
+
+            // Find current tier
+            let currentTier = null;
+            let nextTier = null;
+
+            for (const tier of tiers) {
+                if (amount >= tier.minAmount && amount <= tier.maxAmount) {
+                    currentTier = tier;
+                }
+                if (amount < tier.minAmount && !nextTier) {
+                    nextTier = tier;
+                    break;
+                }
+            }
+
+            // If we're in a tier but there's a higher tier available
+            if (currentTier && currentTier.maxAmount !== Infinity) {
+                const higherTiers = tiers.filter(tier => tier.minAmount > currentTier.maxAmount);
+                if (higherTiers.length > 0) {
+                    nextTier = higherTiers[0];
+                }
+            }
+
+            return { currentTier, nextTier };
+        }
+
+        // Update all displays
+        function updateCalculator(amount) {
+            // Update slider and input
+            amountSlider.value = amount;
+            amountInput.value = formatCurrency(amount);
+
+            // Calculate and display free silver
+            const freeSilver = calculateFreeSilver(amount);
+            freeSilverAmount.textContent = formatCurrency(freeSilver);
+
+            // Update competitor displays
+            updateCompetitorDisplay(amount);
+        }
+
+        // Update competitor display
+        function updateCompetitorDisplay(amount) {
+            const visibleCompetitors = getVisibleCompetitors();
+            
+            if (visibleCompetitors.length === 0) {
+                competitorsSection.style.display = 'none';
+                return;
+            }
+
+            competitorsSection.style.display = 'block';
+            competitorGrid.innerHTML = '';
+
+            visibleCompetitors.forEach(([key, competitor]) => {
+                const competitorSilver = calculateCompetitorSilver(amount, competitor);
+                const tierInfo = getNextTierInfo(amount, competitor);
+                
+                let noteText;
+                if (competitorSilver > 0) {
+                    if (competitor.calculationType === 'flat') {
+                        noteText = `Getting ${formatCurrency(competitorSilver)} free silver (flat rate)`;
+                    } else {
+                        const currentTier = tierInfo.currentTier;
+                        noteText = `Getting ${formatCurrency(competitorSilver)} free silver (${currentTier.percentage}% rate)`;
+                    }
+                } else {
+                    if (tierInfo.nextTier) {
+                        const amountNeeded = tierInfo.nextTier.minAmount - amount;
+                        if (competitor.calculationType === 'flat') {
+                            noteText = `Add ${formatCurrency(amountNeeded)} more to get ${formatCurrency(tierInfo.nextTier.silverAmount)} free silver`;
+                        } else {
+                            noteText = `Add ${formatCurrency(amountNeeded)} more to qualify for ${tierInfo.nextTier.percentage}% free silver`;
+                        }
+                    } else {
+                        noteText = 'Not eligible for free silver';
+                    }
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'competitor-card';
+                card.innerHTML = `
+                    <div class="competitor-name">${competitor.name}</div>
+                    <div class="competitor-amount">${formatCurrency(competitorSilver)}</div>
+                    <div class="competitor-note">${noteText}</div>
+                `;
+                competitorGrid.appendChild(card);
+            });
+        }
+
+        // Get visible competitors based on config
+        function getVisibleCompetitors() {
+            if (!CONFIG.showAllCompetitors) return [];
+
+            const visible = [];
+            if (CONFIG.showCompetitorA) visible.push(['A', CONFIG.competitors.A]);
+            if (CONFIG.showCompetitorB) visible.push(['B', CONFIG.competitors.B]);
+            if (CONFIG.showCompetitorC) visible.push(['C', CONFIG.competitors.C]);
+            
+            return visible;
+        }
+
+        // Event listeners
+        amountSlider.addEventListener('input', function() {
+            const amount = parseInt(this.value);
+            updateCalculator(amount);
+        });
+
+        amountInput.addEventListener('input', function() {
+            const amount = parseCurrency(this.value);
+            // Clamp to slider range
+            const clampedAmount = Math.min(Math.max(amount, 0), 1000000);
+            updateCalculator(clampedAmount);
+        });
+
+        amountInput.addEventListener('blur', function() {
+            // Ensure proper formatting on blur
+            const amount = parseCurrency(this.value);
+            const clampedAmount = Math.min(Math.max(amount, 0), 1000000);
+            this.value = formatCurrency(clampedAmount);
+        });
+
+        // Initialize calculator
+        updateCalculator(0);
+    </script>
+</body>
+</html>
