@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Silver Calculator - 3 Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .controls-section {
+            max-width: 1100px;
+            margin: 0 auto 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .control-group select {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            font-weight: 500;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .control-group select:hover {
+            border-color: #4fc3f7;
+            box-shadow: 0 6px 20px rgba(79, 195, 247, 0.15);
+        }
+
+        .widget-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 32px 64px rgba(13, 71, 161, 0.25);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .widget-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 40px 80px rgba(13, 71, 161, 0.3);
+        }
+
+        .widget-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(79, 195, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(41, 182, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(29, 185, 253, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-section {
+            text-align: center;
+            padding: 48px 48px 32px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+        }
+
+        .main-headline {
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .highlight-text {
+            background: linear-gradient(45deg, #29b6f6, #03a9f4, #29b6f6);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subheadline {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            font-weight: 400;
+            line-height: 1.4;
+            letter-spacing: 0.01em;
+        }
+
+        .benefits-row {
+            display: flex;
+            justify-content: center;
+            gap: clamp(24px, 5vw, 48px);
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4fc3f7;
+            font-weight: 600;
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            padding: 8px 16px;
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+        }
+
+        .check-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(79, 195, 247, 0.3);
+        }
+
+        .calculator-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 200px;
+            gap: 48px;
+            padding: 48px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 2;
+            align-items: center;
+        }
+
+        .step-label {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: 0 6px 16px rgba(79, 195, 247, 0.3);
+        }
+
+        .input-instruction {
+            color: #334155;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            margin-bottom: 24px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .amount-input {
+            width: 100%;
+            max-width: 320px;
+            padding: 20px 24px;
+            font-size: 1.8rem;
+            border: 3px solid #e2e8f0;
+            border-radius: 16px;
+            background: #ffffff;
+            color: #1e293b;
+            font-weight: 800;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            box-shadow: 0 12px 32px rgba(79, 195, 247, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .slider-button {
+            background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+            color: #475569;
+            border: 2px solid #e2e8f0;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .slider-button:hover {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+            border-color: #4fc3f7;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 195, 247, 0.3);
+        }
+
+        .amount-slider {
+            width: 100%;
+            max-width: 380px;
+            margin-top: 20px;
+            height: 8px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+            transition: all 0.2s ease;
+        }
+
+        .amount-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #29b6f6, #4fc3f7);
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(41, 182, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .amount-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(41, 182, 246, 0.5);
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            max-width: 380px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .results-area {
+            text-align: center;
+            padding: 32px 24px;
+            background: linear-gradient(135deg, #0277bd, #0288d1);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(2, 119, 189, 0.3);
+        }
+
+        .results-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .congratulations {
+            color: #29b6f6;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .qualification-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: clamp(0.95rem, 2vw, 1.2rem);
+            margin-bottom: 16px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .free-silver-badge {
+            background: linear-gradient(135deg, #29b6f6, #4fc3f7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: 0 6px 16px rgba(41, 182, 246, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+
+        .silver-amount {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 8px;
+            line-height: 1;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.02em;
+        }
+
+        .value-subtext {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .coin-stack-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 20px;
+            min-height: 350px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .coin-vault {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* Solution 1: CSS Grid with Perspective */
+        .coin-vault.solution-1 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            width: 280px;
+            height: 250px;
+            transform-style: preserve-3d;
+        }
+
+        /* Solution 2: Flexbox with Manual Positioning */
+        .coin-vault.solution-2 {
+            position: relative;
+            width: 280px;
+            height: 250px;
+        }
+
+        /* Solution 3: Absolute Positioning with Transform */
+        .coin-vault.solution-3 {
+            position: relative;
+            width: 280px;
+            height: 250px;
+        }
+
+        .coin-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: -2px;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        /* Solution 1 Styles */
+        .solution-1 .coin-stack:nth-child(1),
+        .solution-1 .coin-stack:nth-child(2), 
+        .solution-1 .coin-stack:nth-child(3) {
+            z-index: 30;
+            transform: scale(1) translateZ(0px);
+        }
+
+        .solution-1 .coin-stack:nth-child(4),
+        .solution-1 .coin-stack:nth-child(5),
+        .solution-1 .coin-stack:nth-child(6) {
+            transform: scale(0.85) translateZ(-20px);
+            z-index: 20;
+            filter: brightness(0.95);
+        }
+
+        .solution-1 .coin-stack:nth-child(7),
+        .solution-1 .coin-stack:nth-child(8),
+        .solution-1 .coin-stack:nth-child(9) {
+            transform: scale(0.7) translateZ(-40px);
+            z-index: 10;
+            filter: brightness(0.9);
+        }
+
+        /* Solution 2 Styles - Manual Flexbox Positioning */
+        .solution-2 .coin-stack {
+            position: absolute;
+        }
+
+        /* Front row */
+        .solution-2 .coin-stack:nth-child(1) { left: 0; top: 150px; z-index: 30; transform: scale(1); }
+        .solution-2 .coin-stack:nth-child(2) { left: 93px; top: 150px; z-index: 30; transform: scale(1); }
+        .solution-2 .coin-stack:nth-child(3) { left: 186px; top: 150px; z-index: 30; transform: scale(1); }
+
+        /* Middle row */
+        .solution-2 .coin-stack:nth-child(4) { left: 20px; top: 75px; z-index: 20; transform: scale(0.8); filter: brightness(0.95); }
+        .solution-2 .coin-stack:nth-child(5) { left: 113px; top: 75px; z-index: 20; transform: scale(0.8); filter: brightness(0.95); }
+        .solution-2 .coin-stack:nth-child(6) { left: 166px; top: 75px; z-index: 20; transform: scale(0.8); filter: brightness(0.95); }
+
+        /* Back row */
+        .solution-2 .coin-stack:nth-child(7) { left: 40px; top: 0; z-index: 10; transform: scale(0.65); filter: brightness(0.9); }
+        .solution-2 .coin-stack:nth-child(8) { left: 113px; top: 0; z-index: 10; transform: scale(0.65); filter: brightness(0.9); }
+        .solution-2 .coin-stack:nth-child(9) { left: 146px; top: 0; z-index: 10; transform: scale(0.65); filter: brightness(0.9); }
+
+        /* Solution 3 Styles - Layered Perspective */
+        .solution-3 .coin-stack {
+            position: absolute;
+        }
+
+        /* Layer 1 - Front */
+        .solution-3 .coin-stack:nth-child(1) { left: 40px; bottom: 0; z-index: 30; transform: scale(1.1); }
+        .solution-3 .coin-stack:nth-child(2) { left: 120px; bottom: 0; z-index: 30; transform: scale(1.1); }
+        .solution-3 .coin-stack:nth-child(3) { left: 200px; bottom: 0; z-index: 30; transform: scale(1.1); }
+
+        /* Layer 2 - Middle */
+        .solution-3 .coin-stack:nth-child(4) { left: 60px; bottom: 60px; z-index: 20; transform: scale(0.9); filter: brightness(0.94); }
+        .solution-3 .coin-stack:nth-child(5) { left: 120px; bottom: 60px; z-index: 20; transform: scale(0.9); filter: brightness(0.94); }
+        .solution-3 .coin-stack:nth-child(6) { left: 180px; bottom: 60px; z-index: 20; transform: scale(0.9); filter: brightness(0.94); }
+
+        /* Layer 3 - Back */
+        .solution-3 .coin-stack:nth-child(7) { left: 80px; bottom: 120px; z-index: 10; transform: scale(0.7); filter: brightness(0.88); }
+        .solution-3 .coin-stack:nth-child(8) { left: 120px; bottom: 120px; z-index: 10; transform: scale(0.7); filter: brightness(0.88); }
+        .solution-3 .coin-stack:nth-child(9) { left: 160px; bottom: 120px; z-index: 10; transform: scale(0.7); filter: brightness(0.88); }
+
+        .coin-stack.overflow-glow {
+            animation: overflow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes overflow-pulse {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(41, 182, 246, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(41, 182, 246, 0.6);
+            }
+        }
+
+        .coin {
+            width: 60px;
+            height: 12px;
+            background: linear-gradient(45deg, #e5e7eb, #f3f4f6, #d1d5db);
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: -8px;
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 1px 2px rgba(255, 255, 255, 0.3);
+            animation: coinDrop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: all 0.3s ease;
+        }
+
+        .coin:nth-child(odd) {
+            background: linear-gradient(45deg, #f8fafc, #ffffff, #e2e8f0);
+        }
+
+        .coin::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 8px;
+            background: linear-gradient(45deg, #cbd5e1, #e2e8f0);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .coin.disappearing {
+            animation: coinDisappear 0.4s ease-out forwards;
+        }
+
+        @keyframes coinDrop {
+            0% {
+                transform: translateY(-40px) scale(0.8) rotateX(90deg);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-8px) scale(1.05) rotateX(10deg);
+            }
+            70% {
+                transform: translateY(2px) scale(0.98) rotateX(-5deg);
+            }
+            100% {
+                transform: translateY(0) scale(1) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes coinDisappear {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 0 rgba(239, 68, 68, 0);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+                background: linear-gradient(45deg, #fca5a5, #f87171, #ef4444);
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+            }
+        }
+
+        @keyframes stackWobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(0.5deg) scale(1.01); }
+            75% { transform: rotate(-0.5deg) scale(1.01); }
+        }
+
+        .stack-label {
+            margin-top: 16px;
+            color: #64748b;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stack-value {
+            font-size: 0.75rem;
+            color: #4fc3f7;
+            font-weight: 600;
+        }
+
+        .overflow-indicator {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            animation: overflow-bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes overflow-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-3px) scale(1.05); }
+        }
+
+        .cta-section {
+            padding: 40px 48px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(79, 195, 247, 0.05), rgba(41, 182, 246, 0.1));
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #29b6f6, #4fc3f7);
+            color: white;
+            border: none;
+            padding: 20px 48px;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 32px rgba(41, 182, 246, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(41, 182, 246, 0.5);
+            background: linear-gradient(135deg, #1976d2, #29b6f6);
+        }
+
+        @media (max-width: 1024px) {
+            .calculator-section {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 32px;
+            }
+            
+            .coin-stack-area {
+                min-height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 32px 24px 24px;
+            }
+            
+            .calculator-section {
+                padding: 24px;
+            }
+            
+            .benefits-row {
+                gap: 16px;
+            }
+            
+            .benefit-item {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+            
+            .cta-section {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls-section">
+        <div class="control-group">
+            <label for="solutionSelect">Test Solution:</label>
+            <select id="solutionSelect" onchange="changeSolution()">
+                <option value="solution-1">Solution 1: CSS Grid with Perspective</option>
+                <option value="solution-2">Solution 2: Manual Absolute Positioning</option>
+                <option value="solution-3">Solution 3: Layered Depth Positioning</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="themeSelect">Color Theme:</label>
+            <select id="themeSelect" onchange="changeTheme()">
+                <option value="ocean">Ocean Blue</option>
+                <option value="forest">Forest Green</option>
+                <option value="sunset">Sunset Orange</option>
+                <option value="purple">Royal Purple</option>
+                <option value="teal">Teal</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="widget-container theme-ocean" id="widgetContainer">
+        <div class="header-section">
+            <h1 class="main-headline">
+                Get <span class="highlight-text">Thousands</span> in Free Silver!
+            </h1>
+            <p class="subheadline">
+                Find out how much free silver you qualify for <strong>instantly</strong>
+            </p>
+            <div class="benefits-row">
+                <div class="benefit-item">
+                    <div class="check-icon">✓</div>
+                    <span><strong>NO</strong> Personal Info Needed!</span>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon">✓</div>
+                    <span><strong>NO</strong> Form Submissions Required!</span>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon">✓</div>
+                    <span><strong>NO</strong> Risk At All!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <div class="input-area">
+                <div class="step-label">Step 1</div>
+                <div class="input-instruction">
+                    Enter the amount of retirement savings <strong>you'd like to protect</strong>
+                </div>
+                <div class="input-container">
+                    <input type="text" class="amount-input" value="$84,000" id="amountInput">
+                </div>
+                <div class="slider-container">
+                    <button class="slider-button" onclick="toggleSlider()">Or use the slider</button>
+                    <input type="range" class="amount-slider" min="0" max="1000000" value="84000" step="1000" id="amountSlider" style="display: none;">
+                    <div class="scale-labels" style="display: none;" id="scaleLabels">
+                        <span>$0</span>
+                        <span>$100K</span>
+                        <span>$200K</span>
+                        <span>$300K</span>
+                        <span>$400K</span>
+                        <span>$500K</span>
+                        <span>$600K</span>
+                        <span>$700K</span>
+                        <span>$800K</span>
+                        <span>$900K</span>
+                        <span>$1M</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-area">
+                <div class="congratulations">Congratulations!</div>
+                <div class="qualification-text">You could qualify for up to this much</div>
+                <div class="free-silver-badge">FREE SILVER</div>
+                <div class="silver-amount" id="silverAmount">$10,080</div>
+                <div class="value-subtext">in precious metals protection</div>
+            </div>
+
+            <div class="coin-stack-area">
+                <div class="coin-vault solution-1" id="coinVault">
+                    <!-- Coin stacks will be dynamically generated -->
+                </div>
+                <div class="stack-label">
+                    <div>Your Free Silver Vault</div>
+                    <div class="stack-value" id="totalStacks">0 stacks • $0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <button class="cta-button">See How to Claim Your Free Silver →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStacks = [];
+        let totalCoinsDisplayed = 0;
+        let audioContext = null;
+        let currentSolution = 'solution-1';
+
+        // Initialize audio context
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Generate coin clink sound
+        function playCoinSound(isBackStack = false) {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            const baseFreq = isBackStack ? 800 : 1200;
+            oscillator.frequency.setValueAtTime(baseFreq, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(baseFreq * 0.3, audioContext.currentTime + 0.1);
+            
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+            filter.Q.setValueAtTime(10, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(isBackStack ? 0.1 : 0.15, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.15);
+        }
+
+        function changeSolution() {
+            const select = document.getElementById('solutionSelect');
+            const coinVault = document.getElementById('coinVault');
+            
+            // Remove all existing solution classes
+            coinVault.className = coinVault.className.replace(/solution-\d+/g, '');
+            
+            // Add the selected solution class
+            currentSolution = select.value;
+            coinVault.classList.add(currentSolution);
+            
+            // Reset and rebuild the stacks for the new solution
+            resetAndRebuildStacks();
+        }
+
+        function changeTheme() {
+            const select = document.getElementById('themeSelect');
+            const container = document.getElementById('widgetContainer');
+            
+            container.className = container.className.replace(/theme-\w+/g, '');
+            container.classList.add('theme-' + select.value);
+        }
+
+        function toggleSlider() {
+            const slider = document.getElementById('amountSlider');
+            const labels = document.getElementById('scaleLabels');
+            const button = document.querySelector('.slider-button');
+            
+            if (slider.style.display === 'none') {
+                slider.style.display = 'block';
+                labels.style.display = 'flex';
+                button.textContent = 'Hide slider';
+            } else {
+                slider.style.display = 'none';
+                labels.style.display = 'none';
+                button.textContent = 'Or use the slider';
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function createCoinStack(stackIndex) {
+            const coinVault = document.getElementById('coinVault');
+            const stackDiv = document.createElement('div');
+            stackDiv.className = 'coin-stack';
+            stackDiv.id = `stack-${stackIndex}`;
+            
+            if (stackIndex === 8) {
+                stackDiv.classList.add('overflow-glow');
+                const overflowIndicator = document.createElement('div');
+                overflowIndicator.className = 'overflow-indicator';
+                overflowIndicator.textContent = '+';
+                stackDiv.appendChild(overflowIndicator);
+            }
+            
+            coinVault.appendChild(stackDiv);
+            return stackDiv;
+        }
+
+        function addCoinToStack(stackElement, coinNumber, isBackStack = false) {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.setAttribute('data-coin-id', `coin-${Date.now()}-${Math.random()}`);
+            
+            stackElement.appendChild(coin);
+            
+            setTimeout(() => {
+                playCoinSound(isBackStack);
+                
+                const allStacks = document.querySelectorAll('.coin-stack');
+                allStacks.forEach(stack => {
+                    if (stack !== stackElement && stack.children.length > 1) {
+                        stack.style.animation = 'stackWobble 0.4s ease-out';
+                        setTimeout(() => {
+                            stack.style.animation = '';
+                        }, 400);
+                    }
+                });
+            }, 200);
+        }
+
+        function removeCoinFromStack(stackElement) {
+            const coins = Array.from(stackElement.children).filter(child => child.classList.contains('coin'));
+            if (coins.length === 0) return;
+            
+            const lastCoin = coins[coins.length - 1];
+            lastCoin.classList.add('disappearing');
+            
+            setTimeout(() => {
+                if (lastCoin.parentNode) {
+                    lastCoin.parentNode.removeChild(lastCoin);
+                }
+            }, 400);
+        }
+
+        function ensureStacksExist(requiredStacks) {
+            for (let i = currentStacks.length; i < requiredStacks; i++) {
+                const newStack = createCoinStack(i);
+                currentStacks.push({ element: newStack, coinCount: 0 });
+            }
+        }
+
+        function resetAndRebuildStacks() {
+            const coinVault = document.getElementById('coinVault');
+            coinVault.innerHTML = '';
+            currentStacks = [];
+            totalCoinsDisplayed = 0;
+            
+            // Get current silver amount and rebuild
+            const silverAmount = parseInt(document.getElementById('silverAmount').textContent.replace(/[^0-9]/g, ''));
+            updateCoinStacks(silverAmount);
+        }
+
+        function updateCoinStacks(silverAmount) {
+            const targetCoins = Math.floor(silverAmount / 1000);
+            const targetStacks = Math.min(Math.ceil(targetCoins / 20), 9);
+            
+            if (targetCoins > 0) {
+                initAudio();
+            }
+            
+            ensureStacksExist(targetStacks);
+            
+            if (targetCoins > totalCoinsDisplayed) {
+                const coinsToAdd = targetCoins - totalCoinsDisplayed;
+                addCoinsIncrementally(coinsToAdd);
+            } else if (targetCoins < totalCoinsDisplayed) {
+                const coinsToRemove = totalCoinsDisplayed - targetCoins;
+                removeCoinsIncrementally(coinsToRemove);
+            }
+            
+            updateStackCounter(silverAmount, targetStacks);
+        }
+
+        function addCoinsIncrementally(coinsToAdd) {
+            for (let i = 0; i < coinsToAdd; i++) {
+                setTimeout(() => {
+                    addNextCoin();
+                }, i * 80);
+            }
+        }
+
+        function removeCoinsIncrementally(coinsToRemove) {
+            for (let i = 0; i < coinsToRemove; i++) {
+                setTimeout(() => {
+                    removeLastCoin();
+                }, i * 60);
+            }
+        }
+
+        function addNextCoin() {
+            let targetStackIndex = -1;
+            let minCoins = 21;
+            
+            for (let i = 0; i < currentStacks.length; i++) {
+                if (currentStacks[i].coinCount < 20 && currentStacks[i].coinCount < minCoins) {
+                    minCoins = currentStacks[i].coinCount;
+                    targetStackIndex = i;
+                }
+            }
+            
+            if (targetStackIndex !== -1) {
+                const isBackStack = targetStackIndex >= 3;
+                addCoinToStack(currentStacks[targetStackIndex].element, currentStacks[targetStackIndex].coinCount, isBackStack);
+                currentStacks[targetStackIndex].coinCount++;
+                totalCoinsDisplayed++;
+            }
+        }
+
+        function removeLastCoin() {
+            let targetStackIndex = -1;
+            let maxCoins = -1;
+            
+            for (let i = currentStacks.length - 1; i >= 0; i--) {
+                if (currentStacks[i].coinCount > maxCoins) {
+                    maxCoins = currentStacks[i].coinCount;
+                    targetStackIndex = i;
+                }
+            }
+            
+            if (targetStackIndex !== -1 && currentStacks[targetStackIndex].coinCount > 0) {
+                removeCoinFromStack(currentStacks[targetStackIndex].element);
+                currentStacks[targetStackIndex].coinCount--;
+                totalCoinsDisplayed--;
+            }
+        }
+
+        function updateStackCounter(silverAmount, activeStacks) {
+            const totalStacksElement = document.getElementById('totalStacks');
+            const stackText = activeStacks === 1 ? 'stack' : 'stacks';
+            totalStacksElement.textContent = `${activeStacks} ${stackText} • ${formatCurrency(silverAmount)}`;
+        }
+
+        function updateSilverAmount(retirementAmount) {
+            const silverAmount = Math.floor(retirementAmount * 0.12);
+            document.getElementById('silverAmount').textContent = formatCurrency(silverAmount);
+            updateCoinStacks(silverAmount);
+        }
+
+        // Input field handling
+        document.getElementById('amountInput').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value) {
+                const numValue = parseInt(value);
+                e.target.value = formatCurrency(numValue);
+                document.getElementById('amountSlider').value = numValue;
+                updateSilverAmount(numValue);
+            }
+        });
+
+        // Slider handling
+        document.getElementById('amountSlider').addEventListener('input', function(e) {
+            const value = parseInt(e.target.value);
+            document.getElementById('amountInput').value = formatCurrency(value);
+            updateSilverAmount(value);
+        });
+
+        // Initialize
+        currentStacks = [];
+        totalCoinsDisplayed = 0;
+        updateSilverAmount(84000);
+    </script>
+</body>
+</html>
